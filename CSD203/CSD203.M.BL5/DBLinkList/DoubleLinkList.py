@@ -77,65 +77,49 @@ class DBLinkList:
         self.size -= 1
         return temp
 
-#BTVN :
-# Them addIndex() ; delIndex()
-#Implement Stack va Queue tu file LinkList.py (Queue : addLast-delFirst, Stack : addFirst-delFirst);
-#Implement tu doublelinklist dung ca 2 cach
-#queue : addFirst-delLast và addLast-delFirst
-#stack : addFirst-delFirst va addLast-delLast
-
-    def addIndex(self,name,age,index):
-        if (index < 0 ): return
-        if (index == 0):
-            self.addFirst(name,age)
+    def addIndex(self, name, age, index):
+        if index < 0 or index > self.size:
             return
-        count = 0
+        if index == 0:
+            self.addFirst(name, age)
+            return
+        if index == self.size:
+            self.addLast(name, age)
+            return
+
         cur = self.head
-        while cur :
-            if (index == count):
-                break
-            count +=1
+        for _ in range(index):
             cur = cur.next
-        if  cur == None:
-            if (index==count):
-                self.addLast(name,age)
-            else:
-                return
-        else:
-            # Insert before the current node
-            temp = cur.data
-            cur.data = Student(name, age)
-            node = Node(temp)
 
-            # Fix the connection issue:
-            node.next = cur.next 
-            if cur.next is not None:  # Update the 'pre' of the node after the inserted node
-                cur.next.pre = node
+        new_node = Node(Student(name, age))
+        new_node.next = cur
+        new_node.pre = cur.pre
+        if cur.pre is not None:
+            cur.pre.next = new_node
+        cur.pre = new_node
 
-            node.pre = cur
-            cur.next = node
-            self.size += 1
-            
-        #end def
-            
-    def delIndex(self,index):
-        if index < 0 : return
-        if index == 0: return self.delFirst()
+        self.size += 1
+
+    def delIndex(self, index):
+        if index < 0:
+            return
+        if index == 0:
+            return self.delFirst()
         count = 0
         cur = self.head
-        while cur :
+        while cur:
             if index == count + 1:
                 break
             count += 1
             cur = cur.next
-        if cur == None or cur.next == None :
+        if cur is None or cur.next is None:
             return
-        elif cur.next.next == None:
+        elif cur.next.next is None:
             return self.delLast()
-        else :
+        else:
             temp = cur.next.data
             cur.next = cur.next.next
             cur.next.pre = cur
             self.size -= 1
             return temp
-        
+
